@@ -6,6 +6,9 @@
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
 [INFO] --- exec:3.1.0:java (default-cli) @ bola-detector ---
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
 === Baseline (Baseado em Regras) — Achados ===
 [GET] /identity/api/v2/user/videos/{video_id} — Endpoint contém path parameter(s): [video_id]
 [PUT] /identity/api/v2/user/videos/{video_id} — Endpoint contém path parameter(s): [video_id]
@@ -20,6 +23,6 @@ Total: 9
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  0.575 s
-[INFO] Finished at: 2026-09-24T16:48:30-03:00
+[INFO] Total time:  0.712 s
+[INFO] Finished at: 2026-09-24T17:46:05-03:00
 [INFO] ------------------------------------------------------------------------

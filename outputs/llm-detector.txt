@@ -8,19 +8,19 @@
 [INFO] --- exec:3.1.0:java (default-cli) @ bola-detector ---
 === Criando usuários de teste ===
 signup [A]: {"message":"User registered successfully! Please Login.","status":200}
-postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NhMjIzNmYxMDhAdC5jbyIsImlhdCI6MTc5MDI4MDE0MCwiZXhwIjoxNzkwODg0OTQwLCJyb2xlIjoidXNlciJ9.GQObEhlk3A4h6aTl1j9uK5G2Cv9q7ZFbdXMK7ik7-mZQZTEzAuN2D7DpUK7jS9k1NcNjrswJ-dntcq1u3flbPhIRKyMdueEreKk3OdrZ0GYgYzX-Nw_Y_p-OX1kCOeQtyKAwem3AIl6_c6f-gsym70jMxszPMFU1D4vv1RxVpRexX8lrlg4mSzorIaD4EluJkayAhQ1g9RiZU8gM4yiOj6oQUj4wgYkPMCWMifvM07_gUf5KaXELuLNYXLqQ7kbzERwN77Vf1jbqp4USdJu1D75w5jnuvhUr3LFirqyZq7bpmsgl7L4dKuAiMV0GeQC-H9gfvkX4wCw1nwlpK4WEHg","type":"Bearer","message":"Login successful","mfaRequired":false}'
+postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NhMTk0M2U1OTdAdC5jbyIsImlhdCI6MTc5MDI4Mjc4MCwiZXhwIjoxNzkwODg3NTgwLCJyb2xlIjoidXNlciJ9.rQ1zMe1u-MW1WchTe1nsJN1wSqJXlUvhaaHWZ4baaPdcezmvPei7nK1g0pNzMDhoqZ5zntbzoZG2d7yM9W1gt5dTCWilXp0jLkWxnKl1xrpeExffVmxGAQx8JhllgPosMhkfE0xIdmsh1ooX4Nk7HbeWqFXVHM-fUnp1pwpqnuwOFINyTr8p78wZW6WXJ-o2QVM146EMRo4aRjmW3z-W8nSQq7hzqRdn1gyP2AnLyApoPYZkfEhYtYBA5lepFqDbmCiOBcm6iS9bl-o7c2avGAjMIqq5W_fhneoyNeXp3PaLnbe1Y3PitgmH4934qgD24jt12O0GhgKhqjBCpsf68Q","type":"Bearer","message":"Login successful","mfaRequired":false}'
 login  [A]: token obtido com sucesso
 signup [B]: {"message":"User registered successfully! Please Login.","status":200}
-postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NiMTE5ZGFmOThAdC5jbyIsImlhdCI6MTc5MDI4MDE0MCwiZXhwIjoxNzkwODg0OTQwLCJyb2xlIjoidXNlciJ9.dsVeVXbVG2z5AAUt8bVsbhbKguzB_PE90WbqPwbFF2xifxsqKuMDVMCp4bYjJ2C8VEyZza9mw4H8f54jL6oDlnsnLTAsq_WR53d4wx1luMZX6f-BELA4GydN0ldhTlM_jqgTuK74vvvKZxCpvaxjaC5KhKx1k9bkyrPMG2a54xofPxHrd5EnE5qbUDM6zFgwgNh-8_HXWEC-vBJzL8sM0qvkwg8bUfRWOtq-nEgIin6VRjnZXRV78YK2bFpJDTrzSPvysPvkn2CoMf5SnLQJPL-HdA0UNf49ilvNQQR4n_sRqAwp14NVxCh-X8-VvU8X2_7o8FQ47I7zbDzGz-FUPA","type":"Bearer","message":"Login successful","mfaRequired":false}'
+postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NiZWJhMjJjZWRAdC5jbyIsImlhdCI6MTc5MDI4Mjc4MCwiZXhwIjoxNzkwODg3NTgwLCJyb2xlIjoidXNlciJ9.AEU_FEw7n4EnIzQBbkYOis4pGUG63bZ4GjuzVzNH5GyvQE6cWi8TUEmVxwCMDKPBzi592J3zE-knpPQZkyKKp9PrSANdqCYFcNqv2pOLcNUMto6175fIUEgANji6A33UWfqXohGh79ydLsQVC_rxxvrS6zCS2L3foqf1Toq7qT03P1crX8F46xD2opqyMaDC-0vixhgsex-FUJSarT4d1DcxkZB_pPzdsa58AY8xhi-fEIvFKwWIjI20ts0iKScbrhtP790HiqwlLTsoUtfTPRjqK_54uM_YZEa9UFAUl7e7Glf6Qat_l8nUrTyxE4dJFkRVALSxisu7b3BOiNBYWA","type":"Bearer","message":"Login successful","mfaRequired":false}'
 login  [B]: token obtido com sucesso
-add_vehicle VIN=BP73567Z277DHX10K pincode=8388
+add_vehicle VIN=4F9S6FBLXH6V11PXR pincode=0954
 add_vehicle response: {"message":"Vehicle save successfully..","status":200}
-vehicle uuid: ee807b31-fd98-4c79-b588-a3aaccab740b
-add_vehicle VIN=21F3R5271C49J2SZ3 pincode=2036
+vehicle uuid: 7b7066be-9f83-4ed1-96d4-1472012d0577
+add_vehicle VIN=SLWE2W609XU66TB39 pincode=5953
 add_vehicle response: {"message":"Vehicle save successfully..","status":200}
-vehicle uuid: 97175fa3-c63e-45d3-8f8a-1b73de93b948
-UserA: tcca2236f108@t.co | vehicle=ee807b31-fd98-4c79-b588-a3aaccab740b
-UserB: tccb119daf98@t.co | vehicle=97175fa3-c63e-45d3-8f8a-1b73de93b948
+vehicle uuid: f155f2d2-5d68-47a0-8ff9-c962824fad60
+UserA: tcca1943e597@t.co | vehicle=7b7066be-9f83-4ed1-96d4-1472012d0577
+UserB: tccbeba22ced@t.co | vehicle=f155f2d2-5d68-47a0-8ff9-c962824fad60
 SLF4J: No SLF4J providers were found.
 SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
@@ -28,26 +28,26 @@ SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
 === Endpoints candidatos: 9 ===
 OpenAI HTTP status: 200
 Endpoints sensíveis identificados: 9
-postJson [/community/api/v2/community/posts] raw='{"id":"QQmgHd9K7fC9YatVbvjKg9","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User A","email":"tcca2236f108@t.co","vehicleid":"ee807b31-fd98-4c79-b588-a3aaccab740b","profile_pic_url":"","created_at":"2026-09-24T20:02:47.867374802Z"},"comments":[],"authorid":45,"CreatedAt":"2026-09-24T20:02:47.867374927Z"}
+postJson [/community/api/v2/community/posts] raw='{"id":"fDeA3ivfC5FhPNh4HuZGH6","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User A","email":"tcca1943e597@t.co","vehicleid":"7b7066be-9f83-4ed1-96d4-1472012d0577","profile_pic_url":"","created_at":"2026-09-24T20:46:38.307566256Z"},"comments":[],"authorid":49,"CreatedAt":"2026-09-24T20:46:38.307566423Z"}
 '
-resourceIds[tcca2236f108@t.co]: {id=ee807b31-fd98-4c79-b588-a3aaccab740b, vehicleId=ee807b31-fd98-4c79-b588-a3aaccab740b, postId=QQmgHd9K7fC9YatVbvjKg9, userId=tcca2236f108@t.co, order_id=1, video_id=1}
-postJson [/community/api/v2/community/posts] raw='{"id":"i9coxVnGNpQxKJemwqEcmL","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User B","email":"tccb119daf98@t.co","vehicleid":"97175fa3-c63e-45d3-8f8a-1b73de93b948","profile_pic_url":"","created_at":"2026-09-24T20:02:48.004167219Z"},"comments":[],"authorid":46,"CreatedAt":"2026-09-24T20:02:48.004167303Z"}
+resourceIds[tcca1943e597@t.co]: {id=7b7066be-9f83-4ed1-96d4-1472012d0577, vehicleId=7b7066be-9f83-4ed1-96d4-1472012d0577, postId=fDeA3ivfC5FhPNh4HuZGH6, userId=tcca1943e597@t.co, order_id=1, video_id=1}
+postJson [/community/api/v2/community/posts] raw='{"id":"Dikaygwwsrv4a6fNdu5Z8d","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User B","email":"tccbeba22ced@t.co","vehicleid":"f155f2d2-5d68-47a0-8ff9-c962824fad60","profile_pic_url":"","created_at":"2026-09-24T20:46:38.421603339Z"},"comments":[],"authorid":50,"CreatedAt":"2026-09-24T20:46:38.421603423Z"}
 '
-resourceIds[tccb119daf98@t.co]: {id=97175fa3-c63e-45d3-8f8a-1b73de93b948, vehicleId=97175fa3-c63e-45d3-8f8a-1b73de93b948, postId=i9coxVnGNpQxKJemwqEcmL, userId=tccb119daf98@t.co, order_id=1, video_id=1}
+resourceIds[tccbeba22ced@t.co]: {id=f155f2d2-5d68-47a0-8ff9-c962824fad60, vehicleId=f155f2d2-5d68-47a0-8ff9-c962824fad60, postId=Dikaygwwsrv4a6fNdu5Z8d, userId=tccbeba22ced@t.co, order_id=1, video_id=1}
 
 === Resultados ===
-[DENIED] get /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
-[DENIED] put /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
-[DENIED] delete /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
-[INCONCLUSIVE] delete /identity/api/v2/admin/videos/{video_id} → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
-[VULNERABLE] get /identity/api/v2/vehicle/{vehicleId}/location → VULNERABLE (own=200, cross=200, bodySimilarity=0,33)
-[VULNERABLE] get /community/api/v2/community/posts/{postId} → VULNERABLE (own=200, cross=200, bodySimilarity=0,55)
-[INCONCLUSIVE] post /community/api/v2/community/posts/{postId}/comment → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
-[VULNERABLE] get /workshop/api/shop/orders/{order_id} → VULNERABLE (own=200, cross=200, bodySimilarity=1,00)
-[VULNERABLE] put /workshop/api/shop/orders/{order_id} → VULNERABLE (own=200, cross=200, bodySimilarity=1,00)
+[DENIED] GET /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
+[DENIED] PUT /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
+[DENIED] DELETE /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
+[INCONCLUSIVE] DELETE /identity/api/v2/admin/videos/{video_id} → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
+[VULNERABLE] GET /identity/api/v2/vehicle/{vehicleId}/location → VULNERABLE (own=200, cross=200, bodySimilarity=0,33)
+[VULNERABLE] GET /community/api/v2/community/posts/{postId} → VULNERABLE (own=200, cross=200, bodySimilarity=0,58)
+[INCONCLUSIVE] POST /community/api/v2/community/posts/{postId}/comment → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
+[VULNERABLE] GET /workshop/api/shop/orders/{order_id} → VULNERABLE (own=200, cross=200, bodySimilarity=1,00)
+[VULNERABLE] PUT /workshop/api/shop/orders/{order_id} → VULNERABLE (own=200, cross=200, bodySimilarity=1,00)
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  28.940 s
-[INFO] Finished at: 2026-09-24T17:02:48-03:00
+[INFO] Total time:  19.932 s
+[INFO] Finished at: 2026-09-24T17:46:38-03:00
 [INFO] ------------------------------------------------------------------------
