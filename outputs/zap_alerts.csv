@@ -1,0 +1,14 @@
+risk,confidence,name,instances,cwe_id
+High,2,SQL Injection,1,89
+Medium,3,Content Security Policy (CSP) Header Not Set,1,693
+Medium,2,Cross-Domain Misconfiguration,5,264
+Low,3,A Server Error response code was returned by the server,7,388
+Low,2,Application Error Disclosure,4,550
+Low,2,Cross-Origin-Resource-Policy Header Missing or Invalid,3,693
+Low,2,Permissions Policy Header Not Set,1,693
+Low,3,"Server Leaks Version Information via ""Server"" HTTP Response Header Field",5,497
+Low,3,Unexpected Content-Type was returned,53,-1
+Informational,3,A Client Error response code was returned by the server,180,388
+Informational,1,Authentication Request Identified,4,-1
+Informational,2,Non-Storable Content,5,524
+TOTAL,,,269,

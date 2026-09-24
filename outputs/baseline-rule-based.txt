@@ -1,0 +1,25 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< br.edu.tcc:bola-detector >----------------------
+[INFO] Building bola-detector 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.1.0:java (default-cli) @ bola-detector ---
+=== Baseline (Baseado em Regras) — Achados ===
+[GET] /identity/api/v2/user/videos/{video_id} — Endpoint contém path parameter(s): [video_id]
+[PUT] /identity/api/v2/user/videos/{video_id} — Endpoint contém path parameter(s): [video_id]
+[DELETE] /identity/api/v2/user/videos/{video_id} — Endpoint contém path parameter(s): [video_id]
+[DELETE] /identity/api/v2/admin/videos/{video_id} — Endpoint contém path parameter(s): [video_id]
+[GET] /identity/api/v2/vehicle/{vehicleId}/location — Endpoint contém path parameter(s): [vehicleId]
+[GET] /community/api/v2/community/posts/{postId} — Endpoint contém path parameter(s): [postId]
+[POST] /community/api/v2/community/posts/{postId}/comment — Endpoint contém path parameter(s): [postId]
+[GET] /workshop/api/shop/orders/{order_id} — Endpoint contém path parameter(s): [order_id]
+[PUT] /workshop/api/shop/orders/{order_id} — Endpoint contém path parameter(s): [order_id]
+Total: 9
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  0.575 s
+[INFO] Finished at: 2026-09-24T16:48:30-03:00
+[INFO] ------------------------------------------------------------------------
