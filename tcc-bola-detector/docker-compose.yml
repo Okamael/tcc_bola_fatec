@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  crapi-web:
+    image: crapi/crapi-web:latest
+    ports:
+      - "8888:8888"
+    environment:
+      - DB_HOST=crapi-mongodb
+      - DB_NAME=crapi
+    depends_on:
+      - crapi-mongodb
+
+  crapi-mongodb:
+    image: mongo:5.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - crapi-mongo-data:/data/db
+
+volumes:
+  crapi-mongo-data:
