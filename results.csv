@@ -1,0 +1,4 @@
+tool,tp,fp,fn,tn,inconclusive,precision,recall,f1,accuracy,time_s,tokens
+Proposta (LLM + Diff),4,0,0,3,2,1.000,1.000,1.000,0.778,14.5,4500
+Baseline (Regras),4,5,0,0,0,0.444,1.000,0.615,0.444,0.5,0
+Baseline (ZAP),0,80,4,0,0,0.000,0.000,0.000,0.000,300,0

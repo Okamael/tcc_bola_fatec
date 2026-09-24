@@ -36,8 +36,21 @@ public class LlmAnalyzer {
             .build();
 
         HttpResponse<String> resp = http.send(req, HttpResponse.BodyHandlers.ofString());
+        System.out.println("OpenAI HTTP status: " + resp.statusCode());
         var root = mapper.readTree(resp.body());
-        String content = root.path("choices").get(0).path("message").path("content").asText();
+
+        // Verificar erro da API antes de tentar acessar choices
+        if (root.has("error")) {
+            throw new IllegalStateException("OpenAI API error: " + root.path("error").path("message").asText()
+                + " (type=" + root.path("error").path("type").asText() + ")");
+        }
+
+        var choices = root.path("choices");
+        if (!choices.isArray() || choices.size() == 0) {
+            throw new IllegalStateException("OpenAI retornou resposta sem choices: " + resp.body());
+        }
+
+        String content = choices.get(0).path("message").path("content").asText();
         return mapper.readValue(content, LlmResponse.class);
     }
 

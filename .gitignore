@@ -1,0 +1,22 @@
+# Chave da API — nunca commitar
+key.env
+*.env
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Java / Maven
+tcc-bola-detector/target/
+*.class
+*.jar
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Outputs gerados — commitados separadamente
+# (remova as linhas abaixo se quiser versionar os outputs)
+# outputs/
