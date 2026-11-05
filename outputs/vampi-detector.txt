@@ -1,0 +1,49 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< br.edu.tcc:bola-detector >----------------------
+[INFO] Building bola-detector 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.1.0:java (default-cli) @ bola-detector ---
+=== [VAmPI] Inicializando banco ===
+createdb: { "message": "Database populated." }
+
+=== [VAmPI] Criando usuários de teste ===
+register [A]: {"message": "Successfully registered. Login to receive an auth token.", "status": "success"}
+login    [A]: token obtido
+register [B]: {"message": "Successfully registered. Login to receive an auth token.", "status": "success"}
+login    [B]: token obtido
+add_book [A]: {"message": "Book has been added.", "status": "success"} (title=tccbookAecc098)
+add_book [B]: {"message": "Book has been added.", "status": "success"} (title=tccbookBbee467)
+UserA: tccabb692f62 | book=tccbookAecc098
+UserB: tccb02f5bc50 | book=tccbookBbee467
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+
+=== [VAmPI] Endpoints candidatos: 5 ===
+OpenAI HTTP status: 200
+Endpoints sensíveis identificados: 5
+
+=== [VAmPI] Resultados ===
+[VULNERABLE] get /books/v1/{book_title} → VULNERABLE (own=200, cross=200, bodySimilarity=0,38)
+[VULNERABLE] get /users/v1/{username} → VULNERABLE (own=200, cross=200, bodySimilarity=0,71)
+[VULNERABLE] delete /users/v1/{username} → VULNERABLE (own=200, cross=200, bodySimilarity=0,71)
+[INCONCLUSIVE] put /users/v1/{username}/email → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
+[INCONCLUSIVE] put /users/v1/{username}/password → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
+
+=== [VAmPI] Resumo ===
+Total testado:  5
+VULNERABLE:     3
+DENIED:         0
+INCONCLUSIVE:   2
+
+CSV salvo em: /Users/okamael/Documents/GitHub/tcc_bola_fatec/tcc-bola-detector/results_vampi.csv
+Proposta VAmPI (LLM + Diff),3,0,0,0,2,1.000,1.000,1.000,1.000,6.3,0
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  6.643 s
+[INFO] Finished at: 2026-11-05T10:05:56-03:00
+[INFO] ------------------------------------------------------------------------

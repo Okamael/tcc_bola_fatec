@@ -1,0 +1,60 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< br.edu.tcc:bola-detector >----------------------
+[INFO] Building bola-detector 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.1.0:java (default-cli) @ bola-detector ---
+=== [Sem LLM] Criando usuários de teste ===
+signup [A]: {"message":"User registered successfully! Please Login.","status":200}
+postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NhZTRmMGRhMjVAdC5jbyIsImlhdCI6MTc5Mzg4MzkzNiwiZXhwIjoxNzk0NDg4NzM2LCJyb2xlIjoidXNlciJ9.ObArQ1djDMfS6lx0DV10Mnq5YTtFkdZKZZD_7r1bFu7g8cZypZwpklXJgyyOwCoAqFzq4MRJfVgbKy31nVgptMXLnVlbpCwnfWgw29TWxgRI0SYqWS8zElyKEdnUAG0byn8uI8MLJEEJIUB_7jtMW17xYHJVQBHzS7c-2GaVR8fg6x3gnVHLy3C8pSiOYv0Bi7R6k9XTo3DNTlpyFmsXKDOqx7g4AoYfT-AZxUB5EGfVFKMd3Pf2FalykHSw02i6vuU8_H1BqA3seYu5t9lUZuAVFV-orWBSRJK97D078DEwocAosQPmQ2WyQLsxL3dao0ztybDQ5SCx6DvtcvM32A","type":"Bearer","message":"Login successful","mfaRequired":false}'
+login  [A]: token obtido com sucesso
+signup [B]: {"message":"User registered successfully! Please Login.","status":200}
+postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NiOWE4YzkzMzlAdC5jbyIsImlhdCI6MTc5Mzg4MzkzNiwiZXhwIjoxNzk0NDg4NzM2LCJyb2xlIjoidXNlciJ9.KKZ7aAKY7G9NEYPNhvGH_kphSLlLDKK-EYsgHj9QlFBwKzgaOXmCKYDLtM5Q2vSm6sYoVsrWzqdxUcqY9n10bJC0XFZ3zYhaFiIb5tpK64iRiMMNgBolccetJAGiaTXRRM_MGiq-wfh0OVeL7xWv0sPZNuV-Hxy7A7-J3cugPU8iXde1om83TP-8xToKAv-JcYaW4hse7nRcDLQpx8nJl8DSOi-0zqwoHjoKbg6UhYdvOelKqsCN2WCapXE4BM25jddGGDNgDpoiCNcCD0J49oZrBYyU-3sDUc4yg4oByHyok-M1QT1-eM9m974wuzmnkrjbsHw3g_QulZHWj2csQw","type":"Bearer","message":"Login successful","mfaRequired":false}'
+login  [B]: token obtido com sucesso
+add_vehicle VIN=UMG0W28LW5J5T7HFT pincode=4199
+add_vehicle response: {"message":"Vehicle save successfully..","status":200}
+vehicle uuid: af706143-aba7-4286-a0c3-522d097e804e
+add_vehicle VIN=GVHC9AWKGDP6UBBZ5 pincode=7185
+add_vehicle response: {"message":"Vehicle save successfully..","status":200}
+vehicle uuid: fdf435db-1cf0-4799-9de6-d478bd4100e0
+UserA: tccae4f0da25@t.co | vehicle=af706143-aba7-4286-a0c3-522d097e804e
+UserB: tccb9a8c9339@t.co | vehicle=fdf435db-1cf0-4799-9de6-d478bd4100e0
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+
+=== [Sem LLM] Endpoints candidatos (regras): 9 ===
+postJson [/community/api/v2/community/posts] raw='{"id":"qTy6wSiCJuRooy6jKyfPpc","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User A","email":"tccae4f0da25@t.co","vehicleid":"af706143-aba7-4286-a0c3-522d097e804e","profile_pic_url":"","created_at":"2026-11-05T13:05:39.296951508Z"},"comments":[],"authorid":58,"CreatedAt":"2026-11-05T13:05:39.296951758Z"}
+'
+resourceIds[tccae4f0da25@t.co]: {id=af706143-aba7-4286-a0c3-522d097e804e, vehicleId=af706143-aba7-4286-a0c3-522d097e804e, postId=qTy6wSiCJuRooy6jKyfPpc, userId=tccae4f0da25@t.co, order_id=1, video_id=1}
+postJson [/community/api/v2/community/posts] raw='{"id":"ok4ewXNFr6G278t8gSa8ng","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User B","email":"tccb9a8c9339@t.co","vehicleid":"fdf435db-1cf0-4799-9de6-d478bd4100e0","profile_pic_url":"","created_at":"2026-11-05T13:05:39.394460675Z"},"comments":[],"authorid":59,"CreatedAt":"2026-11-05T13:05:39.394460842Z"}
+'
+resourceIds[tccb9a8c9339@t.co]: {id=fdf435db-1cf0-4799-9de6-d478bd4100e0, vehicleId=fdf435db-1cf0-4799-9de6-d478bd4100e0, postId=ok4ewXNFr6G278t8gSa8ng, userId=tccb9a8c9339@t.co, order_id=1, video_id=1}
+
+=== [Sem LLM] Resultados ===
+[DENIED] GET /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
+[DENIED] PUT /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
+[DENIED] DELETE /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
+[INCONCLUSIVE] DELETE /identity/api/v2/admin/videos/{video_id} → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
+[VULNERABLE] GET /identity/api/v2/vehicle/{vehicleId}/location → VULNERABLE (own=200, cross=200, bodySimilarity=0,55)
+[VULNERABLE] GET /community/api/v2/community/posts/{postId} → VULNERABLE (own=200, cross=200, bodySimilarity=0,58)
+[INCONCLUSIVE] POST /community/api/v2/community/posts/{postId}/comment → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
+[VULNERABLE] GET /workshop/api/shop/orders/{order_id} → VULNERABLE (own=200, cross=200, bodySimilarity=1,00)
+[VULNERABLE] PUT /workshop/api/shop/orders/{order_id} → VULNERABLE (own=200, cross=200, bodySimilarity=1,00)
+
+=== [Sem LLM] Resumo ===
+Total testado:    9
+VULNERABLE:       4
+DENIED:          3
+INCONCLUSIVE:    2
+
+CSV salvo em: /Users/okamael/Documents/GitHub/tcc_bola_fatec/tcc-bola-detector/results_sem_llm.csv
+Sem LLM,4,0,0,3,2,1.000,1.000,1.000,1.000,3.9,0
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  4.282 s
+[INFO] Finished at: 2026-11-05T10:05:39-03:00
+[INFO] ------------------------------------------------------------------------

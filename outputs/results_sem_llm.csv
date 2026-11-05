@@ -1,0 +1,2 @@
+tool,tp,fp,fn,tn,inconclusive,precision,recall,f1,accuracy,time_s,tokens
+Sem LLM,4,0,0,3,2,1.000,1.000,1.000,1.000,3.9,0
