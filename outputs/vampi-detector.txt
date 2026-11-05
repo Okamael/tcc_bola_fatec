@@ -14,10 +14,10 @@ register [A]: {"message": "Successfully registered. Login to receive an auth tok
 login    [A]: token obtido
 register [B]: {"message": "Successfully registered. Login to receive an auth token.", "status": "success"}
 login    [B]: token obtido
-add_book [A]: {"message": "Book has been added.", "status": "success"} (title=tccbookAecc098)
-add_book [B]: {"message": "Book has been added.", "status": "success"} (title=tccbookBbee467)
-UserA: tccabb692f62 | book=tccbookAecc098
-UserB: tccb02f5bc50 | book=tccbookBbee467
+add_book [A]: {"message": "Book has been added.", "status": "success"} (title=tccbookA6a92a4)
+add_book [B]: {"message": "Book has been added.", "status": "success"} (title=tccbookB7e6592)
+UserA: tccaa4da04cd | book=tccbookA6a92a4
+UserB: tccbe9a9a9fb | book=tccbookB7e6592
 SLF4J: No SLF4J providers were found.
 SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
@@ -33,17 +33,16 @@ Endpoints sensíveis identificados: 5
 [INCONCLUSIVE] put /users/v1/{username}/email → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
 [INCONCLUSIVE] put /users/v1/{username}/password → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
 
-=== [VAmPI] Resumo ===
+=== [VAmPI] Resumo (vs. gabarito) ===
 Total testado:  5
-VULNERABLE:     3
-DENIED:         0
-INCONCLUSIVE:   2
+TP=3  FP=0  FN=2  TN=0  (INCONCLUSIVE=2)
+Precisão=100.0%  Recall=60.0%  F1=75.0%  Acurácia=60.0%
 
 CSV salvo em: /Users/okamael/Documents/GitHub/tcc_bola_fatec/tcc-bola-detector/results_vampi.csv
-Proposta VAmPI (LLM + Diff),3,0,0,0,2,1.000,1.000,1.000,1.000,6.3,0
+Proposta VAmPI (LLM + Diff),3,0,2,0,2,1.000,0.600,0.750,0.600,5.7,0
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  6.643 s
-[INFO] Finished at: 2026-11-05T10:05:56-03:00
+[INFO] Total time:  6.021 s
+[INFO] Finished at: 2026-11-05T10:22:05-03:00
 [INFO] ------------------------------------------------------------------------

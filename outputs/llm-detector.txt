@@ -8,19 +8,19 @@
 [INFO] --- exec:3.1.0:java (default-cli) @ bola-detector ---
 === Criando usuários de teste ===
 signup [A]: {"message":"User registered successfully! Please Login.","status":200}
-postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NhMDAxZTdjYTVAdC5jbyIsImlhdCI6MTc5Mzg4Mzg5MCwiZXhwIjoxNzk0NDg4NjkwLCJyb2xlIjoidXNlciJ9.a_Bj-mpVtpw-CYD4I9uaZhO_AntaIqsuV04z4LcpYQiAoCX4wNFb-LTI7kOY4DgCg5t0h4cWOo5r9K6DphzJKWqQF_WS_GgE8xk8Z9khFkQec2P1x63T8oevCS3uYDNrcXZxK_5l-4bOtL9grRVDVxQf9zV5hJ-3junjNvT9ahiSvqL4DsjSMiF1hA-yBZUKtWws9bjwXWYnWnsa4dfOF82pP5Rta1t3FbNVdvoH89T_rcrP9JcZtLN50sCNF8P5wa0cTqQ-urHHvU2hMhIuTrOcWNvCrTzamfN1GrHyPow8AzRErf_IvzNvU7dX2FY9lbZ6jUmyJBNhv72mvFkuJg","type":"Bearer","message":"Login successful","mfaRequired":false}'
+postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NhNWE3YTU4NzBAdC5jbyIsImlhdCI6MTc5Mzg4NDg1NywiZXhwIjoxNzk0NDg5NjU3LCJyb2xlIjoidXNlciJ9.J-oiysnLJtcKhH3eONGrLPkkrq9EA87g1Ftd_ZogUdxSxlcRlc2qMGmggc07Xm2ZZxwcZZc6YQPFOFhEy9EWAdx9OqaCFEQsPdqJQFqCqOjANUBSG_mt2PTBGKcf21f3ObtqBGW5aTj17wLdkvylJHPhnIfG3a2xXIFmIoxBqeKZNlMicqyehHfLH_Guzrck-VhdFEFC9H6DO3MI4nBpb5rh10w6WZfcyBwMi5a44fe-CbLCyFFmJb4WCF1u1zf6QSLUpLkj0XiGLMHhbtdp4DmhAlkANXwgzgoibJ6pshqTDd1gNdlPFE29YBaLd65poEj5hqqkwMndj8FYXTahYQ","type":"Bearer","message":"Login successful","mfaRequired":false}'
 login  [A]: token obtido com sucesso
 signup [B]: {"message":"User registered successfully! Please Login.","status":200}
-postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NiMmZmZjcxOGVAdC5jbyIsImlhdCI6MTc5Mzg4Mzg5MCwiZXhwIjoxNzk0NDg4NjkwLCJyb2xlIjoidXNlciJ9.qf57rQ-dbU9s2IKm5jKKnvS15LeHVRKLgXq0LNE5zEhX9Pb8d9AjSWwl8ZNvUzFMV6F1IEsTJTDgJsx7sb-ZxczqQL0T-GjF1n3wewXD95r2CgmTlzdEyccw7Qe4eCrELWy0_65KHFpEH1QKjFpzlojkMYtye0eFUFQijxEwfru4yduv1iu9GT6-nOrl-skVBGcIDNBBn2fVGT7MGHHZMeVIJlyJOceZ18LaWub06gt7ZKZd2BlJl5CtveOsL7OCNgffmREyKa36VcmXjhNJslb74NVPzdVLz-RdyFmrkeQjv3hQUdSBEUXPpsAk2DcR6dO_u5yBuCmhmt8lYCKFLQ","type":"Bearer","message":"Login successful","mfaRequired":false}'
+postJson [/identity/api/auth/login] raw='{"token":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0Y2NiYzE5NDA3ZmVAdC5jbyIsImlhdCI6MTc5Mzg4NDg1NywiZXhwIjoxNzk0NDg5NjU3LCJyb2xlIjoidXNlciJ9.c4Uf27g3c6l5OZpiLifpu_WNlZuJ2P67ofme-6dExa14bH2I160iBAeJft7kHoAcwOxYXDopmIfrBn5RbSm1FIMRMaWWKyDFpUGCVlrPDy8B7TXnlpe9Xj-iLcHjIVTfetH3epSn56qvi_7SyF_zYgQi21hhn3jCh4t4b5bzkcM1Wl5zM6ub-m8v0CgSuNEFGU4DY5wlvZBHY_c-kWZNJClPsGVXjyDuOe7TI5rZiEtaCdKGZQY4jHJza20y39rln2dIVZfpOsLhg81XhY0Mr0HnnCa9E2Q5V-bgJqlOm0kJQe49Zk5FpTWyjKpvEUE4UL9hBmxefGTxmInjUM0CiQ","type":"Bearer","message":"Login successful","mfaRequired":false}'
 login  [B]: token obtido com sucesso
-add_vehicle VIN=6S6KTZ061XR398HR1 pincode=6659
+add_vehicle VIN=429M981FRS73095C5 pincode=6739
 add_vehicle response: {"message":"Vehicle save successfully..","status":200}
-vehicle uuid: 6cc4301d-67eb-4706-8c59-e21ef6d2ee4c
-add_vehicle VIN=82N5VA2LHM11P14EL pincode=8605
+vehicle uuid: b77876ad-de5b-4c12-9dca-178ddabfafe0
+add_vehicle VIN=7Z977K3Z209GMZN88 pincode=8253
 add_vehicle response: {"message":"Vehicle save successfully..","status":200}
-vehicle uuid: 1c366153-c070-4f4f-85a3-578cfd2a2193
-UserA: tcca001e7ca5@t.co | vehicle=6cc4301d-67eb-4706-8c59-e21ef6d2ee4c
-UserB: tccb2fff718e@t.co | vehicle=1c366153-c070-4f4f-85a3-578cfd2a2193
+vehicle uuid: 2751c5ae-8aab-4dee-a539-1d42a2bf79ac
+UserA: tcca5a7a5870@t.co | vehicle=b77876ad-de5b-4c12-9dca-178ddabfafe0
+UserB: tccbc19407fe@t.co | vehicle=2751c5ae-8aab-4dee-a539-1d42a2bf79ac
 SLF4J: No SLF4J providers were found.
 SLF4J: Defaulting to no-operation (NOP) logger implementation
 SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
@@ -28,26 +28,34 @@ SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
 === Endpoints candidatos: 9 ===
 OpenAI HTTP status: 200
 Endpoints sensíveis identificados: 9
-postJson [/community/api/v2/community/posts] raw='{"id":"d6E34r97miAp4TmBZSGDMm","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User A","email":"tcca001e7ca5@t.co","vehicleid":"6cc4301d-67eb-4706-8c59-e21ef6d2ee4c","profile_pic_url":"","created_at":"2026-11-05T13:05:25.73997171Z"},"comments":[],"authorid":55,"CreatedAt":"2026-11-05T13:05:25.739971877Z"}
+postJson [/community/api/v2/community/posts] raw='{"id":"FoUPtQbnnHpBmVB7tSRrFf","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User A","email":"tcca5a7a5870@t.co","vehicleid":"b77876ad-de5b-4c12-9dca-178ddabfafe0","profile_pic_url":"","created_at":"2026-11-05T13:21:27.962569003Z"},"comments":[],"authorid":64,"CreatedAt":"2026-11-05T13:21:27.962569169Z"}
 '
-resourceIds[tcca001e7ca5@t.co]: {id=6cc4301d-67eb-4706-8c59-e21ef6d2ee4c, vehicleId=6cc4301d-67eb-4706-8c59-e21ef6d2ee4c, postId=d6E34r97miAp4TmBZSGDMm, userId=tcca001e7ca5@t.co, order_id=1, video_id=1}
-postJson [/community/api/v2/community/posts] raw='{"id":"skFr5DymKYKyCHziUcmjoe","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User B","email":"tccb2fff718e@t.co","vehicleid":"1c366153-c070-4f4f-85a3-578cfd2a2193","profile_pic_url":"","created_at":"2026-11-05T13:05:25.916618252Z"},"comments":[],"authorid":56,"CreatedAt":"2026-11-05T13:05:25.916618377Z"}
+resourceIds[tcca5a7a5870@t.co]: {id=b77876ad-de5b-4c12-9dca-178ddabfafe0, vehicleId=b77876ad-de5b-4c12-9dca-178ddabfafe0, postId=FoUPtQbnnHpBmVB7tSRrFf, userId=tcca5a7a5870@t.co, order_id=1, video_id=1}
+postJson [/community/api/v2/community/posts] raw='{"id":"NXnm9zYAHbaczceMLBR8rW","title":"TCC Test Post","content":"test content for BOLA detection","author":{"nickname":"TCC User B","email":"tccbc19407fe@t.co","vehicleid":"2751c5ae-8aab-4dee-a539-1d42a2bf79ac","profile_pic_url":"","created_at":"2026-11-05T13:21:28.032904086Z"},"comments":[],"authorid":65,"CreatedAt":"2026-11-05T13:21:28.032904211Z"}
 '
-resourceIds[tccb2fff718e@t.co]: {id=1c366153-c070-4f4f-85a3-578cfd2a2193, vehicleId=1c366153-c070-4f4f-85a3-578cfd2a2193, postId=skFr5DymKYKyCHziUcmjoe, userId=tccb2fff718e@t.co, order_id=1, video_id=1}
+resourceIds[tccbc19407fe@t.co]: {id=2751c5ae-8aab-4dee-a539-1d42a2bf79ac, vehicleId=2751c5ae-8aab-4dee-a539-1d42a2bf79ac, postId=NXnm9zYAHbaczceMLBR8rW, userId=tccbc19407fe@t.co, order_id=1, video_id=1}
 
 === Resultados ===
 [DENIED] get /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
 [DENIED] put /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
 [DENIED] delete /identity/api/v2/user/videos/{video_id} → DENIED (own=404, cross=404, bodySimilarity=1,00)
 [INCONCLUSIVE] delete /identity/api/v2/admin/videos/{video_id} → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
-[VULNERABLE] get /identity/api/v2/vehicle/{vehicleId}/location → VULNERABLE (own=200, cross=200, bodySimilarity=0,37)
-[VULNERABLE] get /community/api/v2/community/posts/{postId} → VULNERABLE (own=200, cross=200, bodySimilarity=0,58)
+[VULNERABLE] get /identity/api/v2/vehicle/{vehicleId}/location → VULNERABLE (own=200, cross=200, bodySimilarity=0,33)
+[VULNERABLE] get /community/api/v2/community/posts/{postId} → VULNERABLE (own=200, cross=200, bodySimilarity=0,55)
 [INCONCLUSIVE] post /community/api/v2/community/posts/{postId}/comment → INCONCLUSIVE (own=405, cross=405, bodySimilarity=1,00)
 [VULNERABLE] get /workshop/api/shop/orders/{order_id} → VULNERABLE (own=200, cross=200, bodySimilarity=1,00)
 [VULNERABLE] put /workshop/api/shop/orders/{order_id} → VULNERABLE (own=200, cross=200, bodySimilarity=1,00)
+
+=== [Proposta] Resumo (vs. gabarito) ===
+Total testado:  9
+TP=4  FP=0  FN=1  TN=4  (INCONCLUSIVE=2)
+Precisão=100.0%  Recall=80.0%  F1=88.9%  Acurácia=88.9%
+
+CSV salvo em: /Users/okamael/Documents/GitHub/tcc_bola_fatec/tcc-bola-detector/results_proposta.csv
+Proposta (LLM + Diff),4,0,1,4,2,1.000,0.800,0.889,0.889,31.4,0
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  36.998 s
-[INFO] Finished at: 2026-11-05T10:05:26-03:00
+[INFO] Total time:  31.701 s
+[INFO] Finished at: 2026-11-05T10:21:28-03:00
 [INFO] ------------------------------------------------------------------------

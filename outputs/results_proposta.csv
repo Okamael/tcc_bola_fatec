@@ -1,0 +1,2 @@
+tool,tp,fp,fn,tn,inconclusive,precision,recall,f1,accuracy,time_s,tokens
+Proposta (LLM + Diff),4,0,1,4,2,1.000,0.800,0.889,0.889,31.4,0

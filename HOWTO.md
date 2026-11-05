@@ -113,7 +113,7 @@ cd tcc-bola-detector
 
 mvn exec:java \
   -Dexec.mainClass="br.edu.tcc.bola.Main" \
-  -Dexec.args="openapi.json http://localhost:8888" 2>&1 | tee ../outputs/llm-detector.txt
+  -Dexec.args="openapi.json http://localhost:8888 results_proposta.csv" 2>&1 | tee ../outputs/llm-detector.txt
 ```
 
 **Saída esperada:**
@@ -127,7 +127,12 @@ Endpoints sensíveis identificados: 9
 [VULNERABLE] put /workshop/api/shop/orders/{order_id}
 [DENIED]     get /identity/api/v2/user/videos/{video_id}
 ...
+=== [Proposta] Resumo (vs. gabarito) ===
+TP=4  FP=0  FN=1  TN=4  (INCONCLUSIVE=2)
+Precisão=100.0%  Recall=80.0%  F1=88.9%  Acurácia=88.9%
 ```
+
+> Agora o `Main` também exporta `results_proposta.csv` com as métricas.
 
 > **Atenção:** cada execução cria novos usuários e veículos no crAPI.
 > Se o banco retornar `duplicate key`, corrija o sequence:
@@ -156,7 +161,7 @@ mvn exec:java \
   | tee ../outputs/sem-llm-detector.txt
 ```
 
-**Saída esperada:** `Sem LLM,4,0,0,3,2,1.000,1.000,1.000,1.000,<tempo>,0`
+**Saída esperada:** `Sem LLM (Regras + Diff),4,0,1,4,2,1.000,0.800,0.889,0.889,<tempo>,0`
 e o arquivo `results_sem_llm.csv`.
 
 > Não requer `OPENAI_API_KEY` — o custo de tokens é 0.
@@ -186,7 +191,7 @@ mvn exec:java \
   | tee ../outputs/vampi-detector.txt
 ```
 
-**Saída esperada:** `Proposta VAmPI (LLM + Diff),3,0,0,0,2,1.000,1.000,1.000,1.000,<tempo>,0`
+**Saída esperada:** `Proposta VAmPI (LLM + Diff),3,0,2,0,2,1.000,0.600,0.750,0.600,<tempo>,0`
 e o arquivo `results_vampi.csv`.
 
 > O VAmPI popula seu banco automaticamente via `GET /createdb` (feito pelo `MainVampi`).
@@ -233,12 +238,15 @@ Resultados consolidados dos experimentos (reproduzidos em 05/11/2026):
 
 ```csv
 tool,tp,fp,fn,tn,inconclusive,precision,recall,f1,accuracy,time_s,tokens
-Proposta (LLM + Diff),4,0,0,3,2,1.000,1.000,1.000,1.000,37.0,4500
-Sem LLM (Regras + Diff),4,0,0,3,2,1.000,1.000,1.000,1.000,3.9,0
+Proposta (LLM + Diff),4,0,1,4,2,1.000,0.800,0.889,0.889,31.4,4500
+Sem LLM (Regras + Diff),4,0,1,4,2,1.000,0.800,0.889,0.889,3.7,0
 Baseline (Regras),4,5,0,0,0,0.444,1.000,0.615,0.444,0.5,0
 Baseline (ZAP),0,80,4,0,0,0.000,0.000,0.000,0.000,300,0
-Proposta VAmPI (LLM + Diff),3,0,0,0,2,1.000,1.000,1.000,1.000,6.3,0
+Proposta VAmPI (LLM + Diff),3,0,2,0,2,1.000,0.600,0.750,0.600,5.7,0
 ```
+
+> As métricas são calculadas contra um gabarito (`metrics/GroundTruth.java`);
+> FP e FN não são mais fixados em zero. Ver `RESULTADOS.md` seção 1 (Metodologia).
 
 | Coluna | Descrição |
 |---|---|
@@ -279,7 +287,7 @@ mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.baseline.RuleBasedBaseline" \
 
 # 7. Detector LLM (crAPI — proposta completa)
 mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.Main" \
-  -Dexec.args="openapi.json http://localhost:8888" 2>&1 | tee ../outputs/llm-detector.txt
+  -Dexec.args="openapi.json http://localhost:8888 results_proposta.csv" 2>&1 | tee ../outputs/llm-detector.txt
 
 # 8. Experimento Sem LLM (crAPI — ablação)
 mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.MainSemLLM" \

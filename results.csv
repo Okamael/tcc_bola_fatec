@@ -1,6 +1,6 @@
 tool,tp,fp,fn,tn,inconclusive,precision,recall,f1,accuracy,time_s,tokens
-Proposta (LLM + Diff),4,0,0,3,2,1.000,1.000,1.000,1.000,37.0,4500
-Sem LLM (Regras + Diff),4,0,0,3,2,1.000,1.000,1.000,1.000,3.9,0
+Proposta (LLM + Diff),4,0,1,4,2,1.000,0.800,0.889,0.889,31.4,4500
+Sem LLM (Regras + Diff),4,0,1,4,2,1.000,0.800,0.889,0.889,3.7,0
 Baseline (Regras),4,5,0,0,0,0.444,1.000,0.615,0.444,0.5,0
 Baseline (ZAP),0,80,4,0,0,0.000,0.000,0.000,0.000,300,0
-Proposta VAmPI (LLM + Diff),3,0,0,0,2,1.000,1.000,1.000,1.000,6.3,0
+Proposta VAmPI (LLM + Diff),3,0,2,0,2,1.000,0.600,0.750,0.600,5.7,0

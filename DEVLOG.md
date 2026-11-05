@@ -291,6 +291,42 @@ capturaria esses casos — fica como trabalho futuro.
 
 ---
 
+## 11. Correção das métricas — gabarito (ground truth) em vez de FP/FN fixos
+
+**Problema identificado:**  
+A primeira versão do `MainSemLLM` e `MainVampi` calculava as métricas com
+`FP = 0` e `FN = 0` **fixados no código** (TP = VULNERABLE, TN = DENIED). Isso
+tornava precisão e recall **matematicamente sempre 100%**, independentemente do
+desempenho real — um artefato do cálculo, não um resultado.
+
+**Por que era enganoso:**  
+Os endpoints vulneráveis de escrita (ex.: `PUT /users/v1/{username}/email` no
+VAmPI) ficavam INCONCLUSIVE e simplesmente não entravam na conta, quando na
+verdade são **falsos negativos** (o detector não os pegou).
+
+**Solução:**
+- `metrics/GroundTruth.java` (novo) — conjunto explícito de endpoints
+  reconhecidamente vulneráveis por benchmark (crAPI e VAmPI), com chave
+  normalizada `"metodo path"` em minúsculas.
+- `metrics/MetricsCalculator.java` (novo) — compara cada veredito contra o
+  gabarito e classifica em TP/FP/FN/TN de forma honesta; INCONCLUSIVE de
+  endpoint vulnerável vira FN.
+- `Main`, `MainSemLLM`, `MainVampi` refatorados para usar o `MetricsCalculator`.
+
+**Detalhe que gerou bug:** o gabarito do crAPI tinha `{vehicleId}` (maiúsculo),
+mas a comparação normaliza para minúsculas. Resultado: 1 TP virava FP + FN
+indevidamente. Corrigido deixando todas as chaves do gabarito em minúsculas.
+
+**Impacto nos resultados (agora honestos):**
+- Proposta crAPI: 4 TP, 0 FP, 1 FN → Precisão 100%, Recall 80%, F1 88,9%
+- Sem LLM crAPI: idêntico (4/0/1)
+- Proposta VAmPI: 3 TP, 0 FP, 2 FN → Precisão 100%, Recall 60%, F1 75%
+
+O recall abaixo de 100% é explicado integralmente pela limitação GET-only do
+verificador (os FN são todos endpoints de escrita).
+
+---
+
 ## Resumo dos arquivos alterados
 
 | Arquivo | Alterações |
@@ -303,6 +339,9 @@ capturaria esses casos — fica como trabalho futuro.
 | `src/.../MainSemLLM.java` | **Novo** — experimento de ablação sem LLM (Tarefa 1) |
 | `src/.../setup/VampiSetup.java` | **Novo** — setup do VAmPI (Tarefa 2) |
 | `src/.../MainVampi.java` | **Novo** — pipeline LLM + Diff no VAmPI (Tarefa 2) |
+| `src/.../metrics/GroundTruth.java` | **Novo** — gabarito de endpoints vulneráveis por benchmark |
+| `src/.../metrics/MetricsCalculator.java` | **Novo** — cálculo honesto de TP/FP/FN/TN vs gabarito |
+| `src/.../Main.java` | Também passou a exportar CSV com métricas vs gabarito |
 | `vampi-openapi.json` | **Novo** — spec do VAmPI |
 | `scripts/zap_json_to_csv.py` | **Novo** — converte relatório JSON do ZAP para CSV |
 
