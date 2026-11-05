@@ -1,0 +1,89 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Observatorio de Drones de Resgate",
+    "description": "API sintetica para avaliacao de deteccao de BOLA em alvo inedito",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "http://localhost:7070" }
+  ],
+  "paths": {
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "Registra um piloto",
+        "responses": { "200": { "description": "piloto registrado" } }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "Autentica um piloto e retorna token",
+        "responses": { "200": { "description": "token emitido" } }
+      }
+    },
+    "/api/v1/missions": {
+      "post": {
+        "summary": "Cria uma missao de resgate para o piloto autenticado",
+        "responses": { "200": { "description": "missao criada" } }
+      }
+    },
+    "/api/v1/missions/{missionId}": {
+      "get": {
+        "summary": "Recupera uma missao pelo id",
+        "parameters": [
+          { "name": "missionId", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "dados da missao, incluindo coordinates e briefing" },
+          "404": { "description": "missao nao encontrada" }
+        }
+      },
+      "put": {
+        "summary": "Atualiza uma missao pelo id",
+        "parameters": [
+          { "name": "missionId", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "missao atualizada" },
+          "404": { "description": "missao nao encontrada" }
+        }
+      },
+      "delete": {
+        "summary": "Remove uma missao pelo id",
+        "parameters": [
+          { "name": "missionId", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "missao removida" },
+          "403": { "description": "acesso negado" },
+          "404": { "description": "missao nao encontrada" }
+        }
+      }
+    },
+    "/api/v1/missions/{missionId}/briefing": {
+      "get": {
+        "summary": "Recupera o briefing confidencial de uma missao",
+        "parameters": [
+          { "name": "missionId", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "briefing da missao" },
+          "403": { "description": "acesso negado" },
+          "404": { "description": "missao nao encontrada" }
+        }
+      }
+    },
+    "/api/v1/pilots/{pilotId}/profile": {
+      "get": {
+        "summary": "Recupera o perfil de um piloto pelo id",
+        "parameters": [
+          { "name": "pilotId", "in": "path", "required": true, "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "perfil do piloto" },
+          "404": { "description": "piloto nao encontrado" }
+        }
+      }
+    }
+  }
+}

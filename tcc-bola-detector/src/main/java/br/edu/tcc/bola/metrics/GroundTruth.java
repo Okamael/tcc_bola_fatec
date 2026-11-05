@@ -44,6 +44,18 @@ public final class GroundTruth {
         "put /users/v1/{username}/password"
     );
 
+    /**
+     * Drone Rescue API (alvo sintético inédito) — gabarito definido POR
+     * CONSTRUÇÃO (nós escrevemos a aplicação). São vulneráveis os endpoints que
+     * NÃO validam o dono; os de briefing e delete validam (seguros → não entram).
+     * Chaves em minúsculas (a comparação normaliza para lowercase).
+     */
+    public static final Set<String> DRONE_VULNERABLE = Set.of(
+        "get /api/v1/missions/{missionid}",
+        "put /api/v1/missions/{missionid}",
+        "get /api/v1/pilots/{pilotid}/profile"
+    );
+
     /** Normaliza "METODO path" para a chave canônica (minúsculas). */
     public static String key(String method, String path) {
         return (method + " " + path).toLowerCase();
