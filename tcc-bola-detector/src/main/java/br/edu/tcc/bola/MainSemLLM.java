@@ -3,11 +3,10 @@ package br.edu.tcc.bola;
 import br.edu.tcc.bola.baseline.RuleBasedBaseline;
 import br.edu.tcc.bola.baseline.RuleBasedBaseline.BaselineFinding;
 import br.edu.tcc.bola.llm.LlmResponse.SensitiveEndpoint;
+import br.edu.tcc.bola.metrics.GroundTruth;
+import br.edu.tcc.bola.metrics.MetricsCalculator;
 import br.edu.tcc.bola.setup.CrApiSetup;
 import br.edu.tcc.bola.verifier.*;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -67,55 +66,18 @@ public class MainSemLLM {
 
         var results = verifier.verify(endpoints, resourcesA, resourcesB);
 
-        // 5. Relatório no console
-        int vuln = 0, denied = 0, inconclusive = 0;
+        // 5. Relatório no console (vereditos brutos)
         System.out.println("\n=== [Sem LLM] Resultados ===");
         for (var r : results) {
             System.out.printf("[%s] %s %s → %s (%s)%n",
                 r.verdict(), r.endpoint().method(), r.endpoint().path(),
                 r.verdict(), r.evidence());
-            switch (r.verdict()) {
-                case VULNERABLE  -> vuln++;
-                case DENIED      -> denied++;
-                case INCONCLUSIVE -> inconclusive++;
-            }
         }
 
-        System.out.println("\n=== [Sem LLM] Resumo ===");
-        System.out.println("Total testado:    " + results.size());
-        System.out.println("VULNERABLE:       " + vuln);
-        System.out.println("DENIED:          " + denied);
-        System.out.println("INCONCLUSIVE:    " + inconclusive);
-
-        // 6. Exportar CSV
-        // TP = VULNERABLE, FP = 0, FN = 0, TN = DENIED, INCONCLUSIVE = inconclusive
-        int tp = vuln;
-        int fp = 0;
-        int fn = 0;
-        int tn = denied;
-
-        double precision = (tp + fp) > 0 ? (double) tp / (tp + fp) : 0;
-        double recall    = (tp + fn) > 0 ? (double) tp / (tp + fn) : 0;
-        double f1 = (precision + recall) > 0
-            ? 2 * precision * recall / (precision + recall) : 0;
-        int total = tp + fp + fn + tn;
-        double accuracy = total > 0 ? (double) (tp + tn) / total : 0;
-
+        // 6. Métricas contra o gabarito (crAPI) e exportação do CSV
         double elapsed = (System.currentTimeMillis() - start) / 1000.0;
-
-        String csvLine = String.format(Locale.US,
-            "Sem LLM,%d,%d,%d,%d,%d,%.3f,%.3f,%.3f,%.3f,%.1f,0",
-            tp, fp, fn, tn, inconclusive,
-            precision, recall, f1, accuracy, elapsed
-        );
-
-        Path out = Path.of(csvPath);
-        try (PrintWriter pw = new PrintWriter(Files.newBufferedWriter(out))) {
-            pw.println("tool,tp,fp,fn,tn,inconclusive,precision,recall,f1,accuracy,time_s,tokens");
-            pw.println(csvLine);
-        }
-
-        System.out.println("\nCSV salvo em: " + out.toAbsolutePath());
-        System.out.println(csvLine);
+        var metrics = MetricsCalculator.compute(results, GroundTruth.CRAPI_VULNERABLE);
+        MetricsCalculator.printSummary("Sem LLM", results, metrics);
+        MetricsCalculator.writeCsv(csvPath, "Sem LLM (Regras + Diff)", metrics, elapsed, 0);
     }
 }
