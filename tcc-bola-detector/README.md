@@ -1,78 +1,54 @@
-# TCC BOLA Detector
+# tcc-bola-detector
 
-Detecção de BOLA (Broken Object Level Authorization) em APIs REST baseada em
-inferência semântica por LLM e verificação diferencial determinística.
+Detector de **BOLA** (Broken Object Level Authorization) em APIs REST:
+inferência semântica via LLM (`gpt-4o-mini`) + verificação diferencial
+determinística multi-sessão.
 
-## Pré-requisitos
+Este é o módulo do detector. Para a visão geral do projeto, o guia de execução
+completo e a análise dos resultados, veja os documentos na raiz do repositório:
 
-- Java 17+
-- Maven 3.9+
-- Docker + Docker Compose
-- Python 3.9+ (para scripts de visualização)
-- Chave de API da OpenAI (`OPENAI_API_KEY`)
+- **[../README.md](../README.md)** — visão geral e índice
+- **[../HOWTO.md](../HOWTO.md)** — passo a passo de todos os experimentos
+- **[../RESULTADOS.md](../RESULTADOS.md)** — métricas e análise
+- **[../DEVLOG.md](../DEVLOG.md)** — diário de decisões técnicas
 
-## Setup
+## Stack
 
-### 1. Subir o crAPI
+- Java 17 + Maven
+- `swagger-parser` (parsing OpenAPI) e `jackson-databind` (JSON)
 
-```bash
-cd crapi/
-docker compose up -d
-```
+## Pacotes
 
-Verifique:
+| Pacote | Responsabilidade |
+|---|---|
+| `openapi/` | Extrai endpoints com path parameters do spec |
+| `llm/` | Inferência semântica via OpenAI |
+| `verifier/` | Motor de verificação diferencial (cross-user) |
+| `setup/` | Adaptadores de setup por alvo (crAPI, VAmPI, Drone) |
+| `baseline/` | Baseline de regras estáticas |
+| `metrics/` | Gabarito (ground truth) e cálculo de TP/FP/FN/TN |
 
-```bash
-curl http://localhost:8888/health
-```
+## Pontos de entrada (classes `Main*`)
 
-### 2. Baixar a especificação OpenAPI
+| Classe | Experimento |
+|---|---|
+| `Main` | Proposta completa (LLM + Diff) no crAPI |
+| `MainSemLLM` | Ablação: regras estáticas + Diff (sem LLM) |
+| `MainVampi` | Proposta no VAmPI (generalização) |
+| `MainDrone` | Proposta no alvo sintético inédito |
+| `baseline.RuleBasedBaseline` | Baseline de regras |
 
-```bash
-curl http://localhost:8888/openapi.json -o openapi.json
-```
-
-### 3. Compilar o projeto
-
-```bash
-mvn clean package
-```
-
-### 4. Exportar a chave da OpenAI
-
-```bash
-export OPENAI_API_KEY=sk-...
-```
-
-### 5. Executar o detector
+## Execução rápida
 
 ```bash
+mvn clean package -q
+export OPENAI_API_KEY=$(cut -d= -f2- ../key.env)
+
 mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.Main" \
-  -Dexec.args="openapi.json http://localhost:8888"
+  -Dexec.args="openapi.json http://localhost:8888 results_proposta.csv"
 ```
 
-### 6. Executar o baseline
-
-```bash
-mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.baseline.RuleBasedBaseline" \
-  -Dexec.args="openapi.json"
-```
-
-### 7. Gerar gráficos
-
-```bash
-pip install matplotlib numpy
-python scripts/generate_charts.py results.csv
-```
-
-## Estrutura
-
-- `src/main/java/br/edu/tcc/bola/openapi/` — parsing OpenAPI
-- `src/main/java/br/edu/tcc/bola/llm/` — inferência semântica via LLM
-- `src/main/java/br/edu/tcc/bola/verifier/` — motor de verificação diferencial
-- `src/main/java/br/edu/tcc/bola/setup/` — setup automatizado do crAPI
-- `src/main/java/br/edu/tcc/bola/baseline/` — baseline baseado em regras
-- `scripts/` — scripts Python auxiliares
+Os comandos de cada experimento estão em **[../HOWTO.md](../HOWTO.md)**.
 
 ## Licença
 
