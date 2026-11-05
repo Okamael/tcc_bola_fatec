@@ -1,0 +1,2 @@
+tool,tp,fp,fn,tn,inconclusive,precision,recall,f1,accuracy,time_s,tokens
+Proposta Drone (LLM + Diff),3,1,0,1,0,0.750,1.000,0.857,0.800,7.2,0

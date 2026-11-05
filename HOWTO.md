@@ -31,12 +31,17 @@ tcc_bola_fatec/
 │   ├── zap_alerts.csv
 │   ├── metrics_comparison.png
 │   └── confusion_matrices.png
-└── tcc-bola-detector/        ← projeto Java (código-fonte)
+├── tcc-bola-detector/        ← projeto Java (detector)
+│   ├── pom.xml
+│   ├── openapi.json          ← spec do crAPI
+│   ├── vampi-openapi.json    ← spec do VAmPI
+│   ├── drone-openapi.json    ← spec do alvo inédito
+│   ├── scripts/
+│   │   ├── generate_charts.py
+│   │   └── zap_json_to_csv.py
+│   └── src/
+└── drone-rescue-api/         ← alvo sintético inédito (Spring Boot + H2)
     ├── pom.xml
-    ├── openapi.json
-    ├── scripts/
-    │   ├── generate_charts.py
-    │   └── zap_json_to_csv.py
     └── src/
 ```
 
@@ -198,6 +203,39 @@ e o arquivo `results_vampi.csv`.
 
 ---
 
+## Passo 5d — Teste em alvo INÉDITO (Drone Rescue API)
+
+Valida o detector contra uma API sintética criada para o TCC, que a LLM não pode
+conhecer — eliminando o risco de contaminação de benchmark. Gabarito 100%
+controlado por construção.
+
+```bash
+# 1. Subir a aplicação alvo (Spring Boot + H2 em memória, porta 7070)
+cd drone-rescue-api
+mvn clean package -DskipTests
+java -jar target/drone-rescue-api-1.0.0.jar &
+cd ..
+
+# 2. Baixar o spec
+curl -s http://localhost:7070/openapi.json -o tcc-bola-detector/drone-openapi.json
+
+# 3. Rodar o detector completo
+cd tcc-bola-detector
+export OPENAI_API_KEY=$(cut -d= -f2- ../key.env)
+
+mvn exec:java \
+  -Dexec.mainClass="br.edu.tcc.bola.MainDrone" \
+  -Dexec.args="drone-openapi.json http://localhost:7070 results_drone.csv" 2>&1 \
+  | tee ../outputs/drone-detector.txt
+```
+
+**Saída esperada:** `Proposta Drone (LLM + Diff),3,1,0,1,0,0.750,1.000,0.857,0.800,<tempo>,0`
+(recall 100% em alvo inédito; 1 FP no DELETE pela limitação GET-only).
+
+> O H2 é recriado a cada boot — não há estado persistente entre execuções.
+
+---
+
 ## Passo 6 — Executar o ZAP (Baseline DAST)
 
 ```bash
@@ -243,6 +281,7 @@ Sem LLM (Regras + Diff),4,0,1,4,2,1.000,0.800,0.889,0.889,3.7,0
 Baseline (Regras),4,5,0,0,0,0.444,1.000,0.615,0.444,0.5,0
 Baseline (ZAP),0,80,4,0,0,0.000,0.000,0.000,0.000,300,0
 Proposta VAmPI (LLM + Diff),3,0,2,0,2,1.000,0.600,0.750,0.600,5.7,0
+Proposta Drone (LLM + Diff),3,1,0,1,0,0.750,1.000,0.857,0.800,7.2,0
 ```
 
 > As métricas são calculadas contra um gabarito (`metrics/GroundTruth.java`);
@@ -298,6 +337,11 @@ mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.MainSemLLM" \
 mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.MainVampi" \
   -Dexec.args="vampi-openapi.json http://localhost:5001 results_vampi.csv" 2>&1 \
   | tee ../outputs/vampi-detector.txt
+
+# 9b. Detector LLM (Drone — alvo inédito, sobe via java -jar na porta 7070)
+mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.MainDrone" \
+  -Dexec.args="drone-openapi.json http://localhost:7070 results_drone.csv" 2>&1 \
+  | tee ../outputs/drone-detector.txt
 
 # 10. ZAP (crAPI — baseline DAST)
 docker run --rm --network host -v $(pwd):/zap/wrk/:rw \

@@ -1,0 +1,43 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ----------------------< br.edu.tcc:bola-detector >----------------------
+[INFO] Building bola-detector 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- exec:3.1.0:java (default-cli) @ bola-detector ---
+=== [Drone] Criando pilotos de teste ===
+login    [A]: pilotId=3
+login    [B]: pilotId=4
+mission  [A]: missionId=3
+mission  [B]: missionId=4
+PilotA: 3 | mission=3
+PilotB: 4 | mission=4
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+
+=== [Drone] Endpoints candidatos: 5 ===
+OpenAI HTTP status: 200
+Endpoints sensíveis identificados: 5
+
+=== [Drone] Resultados ===
+[VULNERABLE] GET /api/v1/missions/{missionId} → VULNERABLE (own=200, cross=200, bodySimilarity=0,76)
+[VULNERABLE] PUT /api/v1/missions/{missionId} → VULNERABLE (own=200, cross=200, bodySimilarity=0,76)
+[VULNERABLE] DELETE /api/v1/missions/{missionId} → VULNERABLE (own=200, cross=200, bodySimilarity=0,76)
+[DENIED] GET /api/v1/missions/{missionId}/briefing → DENIED (own=200, cross=403, bodySimilarity=0,07)
+[VULNERABLE] GET /api/v1/pilots/{pilotId}/profile → VULNERABLE (own=200, cross=200, bodySimilarity=0,45)
+
+=== [Drone] Resumo (vs. gabarito) ===
+Total testado:  5
+TP=3  FP=1  FN=0  TN=1  (INCONCLUSIVE=0)
+Precisão=75.0%  Recall=100.0%  F1=85.7%  Acurácia=80.0%
+
+CSV salvo em: /Users/okamael/Documents/GitHub/tcc_bola_fatec/tcc-bola-detector/results_drone.csv
+Proposta Drone (LLM + Diff),3,1,0,1,0,0.750,1.000,0.857,0.800,7.2,0
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.601 s
+[INFO] Finished at: 2026-11-05T10:39:28-03:00
+[INFO] ------------------------------------------------------------------------

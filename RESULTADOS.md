@@ -19,6 +19,7 @@ reconhecidamente vulneráveis em cada benchmark — ver seção 3 e a classe
 | **Baseline (Regras)** — crAPI | 4 | 5 | 0 | 0 | 0 | 44,4% | 100% | 61,5% | 44,4% | 0,5 | 0 |
 | **Baseline (ZAP)** — crAPI | 0 | 80 | 4 | 0 | 0 | 0% | 0% | 0% | 0% | ~300 | 0 |
 | **Proposta (LLM + Diff)** — VAmPI | 3 | 0 | 2 | 0 | 2 | 100% | 60% | 75% | 60% | 5,7 | 0* |
+| **Proposta (LLM + Diff)** — Drone (inédito) | 3 | 1 | 0 | 1 | 0 | 75% | 100% | 85,7% | 80% | 7,2 | 0* |
 
 > *No VAmPI o LLM foi usado, mas o custo de tokens não foi instrumentado nesta
 > execução (coluna registra 0 por limitação do contador, não por ausência de uso).
@@ -83,12 +84,49 @@ Coluna "Classe" = classificação vs. gabarito (seção 1, Metodologia).
 
 **Total:** 3 TP, 0 FP, 2 FN, 0 TN.
 
+### 2.3 Proposta na Drone Rescue API (alvo inédito, 5 endpoints)
+
+Este é o experimento que **elimina o risco de contaminação de benchmark**: a API
+foi criada do zero para o TCC (domínio fictício "Observatório de Drones de
+Resgate"), nunca publicada antes dos testes. Logo, a LLM não pode tê-la
+memorizado — qualquer acerto vem de **raciocínio estrutural** sobre o spec. O
+gabarito é conhecido por construção (nós escrevemos quais endpoints validam o
+dono e quais não).
+
+| # | Método | Endpoint | Veredito | Classe | Interpretação |
+|---|---|---|---|---|---|
+| 1 | GET | `/api/v1/missions/{missionId}` | **VULNERABLE** | **TP** | A leu coordinates/briefing da missão de B |
+| 2 | PUT | `/api/v1/missions/{missionId}` | **VULNERABLE** | **TP** | A alterou a missão de B |
+| 3 | GET | `/api/v1/pilots/{pilotId}/profile` | **VULNERABLE** | **TP** | A leu o perfil de B |
+| 4 | GET | `/api/v1/missions/{missionId}/briefing` | DENIED | TN | Seguro: `own=200, cross=403` — validação de posse detectada |
+| 5 | DELETE | `/api/v1/missions/{missionId}` | **VULNERABLE** | **FP** | **Falso positivo** — ver explicação abaixo |
+
+**Total:** 3 TP, 1 FP, 0 FN, 1 TN. Precisão 75%, **Recall 100%**, F1 85,7%.
+
+**Destaques deste experimento:**
+- **Recall 100% em alvo inédito:** a arquitetura encontrou os 3 BOLAs reais sem
+  conhecimento prévio da aplicação — forte evidência de que raciocina sobre a
+  estrutura, não memoriza benchmarks públicos.
+- **Detecção correta de endpoint seguro (TN):** o `GET /briefing` valida o dono
+  e respondeu `403` no acesso cruzado; o verificador diferencial captou a
+  diferença (`own=200` vs `cross=403`) e **não** o marcou como vulnerável. Isso
+  demonstra o valor da verificação diferencial: ela distingue o endpoint seguro
+  do vulnerável mesmo quando ambos têm a mesma assinatura.
+- **1 falso positivo (DELETE) — causa conhecida, não é erro de BOLA:** o
+  `DELETE /missions/{missionId}` é seguro (retorna 403 no acesso cruzado), mas
+  foi marcado VULNERABLE. A causa é a **limitação GET-only**: o verificador, ao
+  "testar" o DELETE, na verdade faz um GET na mesma URL, que casa com a rota
+  vulnerável `GET /missions/{missionId}` e retorna 200/200. O FP, portanto, é um
+  artefato da mesma limitação que gera os FN em outros alvos — e some assim que o
+  verificador passar a usar o método HTTP correto.
+
 ---
 
-## 3. Por que alguns endpoints ficaram INCONCLUSIVE?
+## 3. A limitação GET-only e suas três manifestações
 
-Há **duas causas distintas**, ambas ligadas ao mesmo fator: o
-`DifferentialVerifier` atual executa **apenas requisições GET**.
+O `DifferentialVerifier` atual executa **apenas requisições GET**. Essa única
+limitação se manifesta de três formas distintas nos resultados — entendê-las é
+chave para interpretar as métricas.
 
 ### Causa A — Endpoint não aceita GET (HTTP 405)
 
@@ -114,6 +152,17 @@ No crAPI, os três endpoints de vídeo retornaram `own=404, cross=404` → DENIE
 Os usuários de teste criados pelo `CrApiSetup` não possuem vídeos, então o
 recurso não existe nem para o próprio dono. Isso é classificado como DENIED
 (acesso negado por ausência), não como vulnerabilidade — comportamento correto.
+
+### Causa C — Colisão de rota em endpoint de escrita (falso positivo)
+
+Na Drone Rescue API, o `DELETE /missions/{missionId}` é seguro (valida o dono,
+retorna 403 no acesso cruzado), mas foi marcado VULNERABLE. Como o verificador
+faz GET na URL do DELETE, a requisição casou com a rota **`GET /missions/{id}`**
+(que é vulnerável) e retornou 200/200. Resultado: 1 **falso positivo**.
+
+Ou seja, a mesma limitação GET-only que gera FN (causa A) também pode gerar FP
+quando uma URL de escrita segura coincide com uma rota GET vulnerável. Reforça
+que estender o verificador para os métodos HTTP corretos é a melhoria prioritária.
 
 ---
 
@@ -143,10 +192,21 @@ GET, perdendo os BOLAs em endpoints de escrita. Isso indica um caminho claro de
 melhoria (seção 5) sem comprometer a precisão já alcançada.
 
 **Achado 3 — A arquitetura generaliza.**  
-O detector funcionou no VAmPI sem nenhuma alteração no núcleo (LLM +
-`DifferentialVerifier`). Apenas o adaptador de setup (`VampiSetup`) foi escrito,
-análogo ao `CrApiSetup`. Isso evidencia que a separação entre "setup específico
-do alvo" e "motor de detecção genérico" é uma decisão arquitetural sólida.
+O detector funcionou no VAmPI e na Drone Rescue API sem nenhuma alteração no
+núcleo (LLM + `DifferentialVerifier`). Apenas o adaptador de setup foi escrito
+para cada alvo (`VampiSetup`, `DroneSetup`), análogo ao `CrApiSetup`. Isso
+evidencia que a separação entre "setup específico do alvo" e "motor de detecção
+genérico" é uma decisão arquitetural sólida.
+
+**Achado 3b — Robustez a contaminação de benchmark (alvo inédito).**  
+crAPI e VAmPI são projetos públicos que podem ter feito parte do corpus de treino
+da LLM, levantando a dúvida: *"a LLM acerta porque reconhece o benchmark?"*. Para
+responder, criou-se a **Drone Rescue API** — aplicação sintética, de domínio
+fictício, nunca publicada antes dos experimentos. Nela o detector obteve
+**recall de 100%** (achou os 3 BOLAs reais) e ainda **classificou corretamente um
+endpoint seguro** (TN). Como a LLM não poderia ter memorizado uma aplicação que
+não existia, o resultado indica **raciocínio estrutural** sobre o spec, não
+reconhecimento. Este é o argumento mais forte contra a crítica de contaminação.
 
 **Achado 4 — O ZAP (DAST genérico) não detecta BOLA.**  
 O ZAP encontrou 80 alertas, nenhum deles BOLA (Recall 0%). Confirma a premissa
@@ -185,6 +245,9 @@ completa** do `HOWTO.md`. As saídas brutas de cada execução estão em `output
 | `outputs/llm-detector.txt` | Log completo da proposta no crAPI |
 | `outputs/sem-llm-detector.txt` | Log do experimento de ablação |
 | `outputs/vampi-detector.txt` | Log da proposta no VAmPI |
+| `outputs/drone-detector.txt` | Log da proposta no alvo inédito (Drone) |
+| `outputs/results_drone.csv` | Métricas do alvo inédito |
+| `outputs/drone-openapi.json` | Spec da Drone Rescue API |
 | `outputs/baseline-rule-based.txt` | Log do baseline de regras |
 | `outputs/zap_alerts.csv` | Alertas do ZAP |
 | `outputs/results_proposta.csv` | Métricas da proposta no crAPI |

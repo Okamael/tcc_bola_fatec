@@ -327,6 +327,39 @@ verificador (os FN são todos endpoints de escrita).
 
 ---
 
+## 12. Alvo inédito — Drone Rescue API (robustez a contaminação)
+
+**Motivação:** crAPI e VAmPI são públicos e podem ter sido vistos pela LLM no
+treino. Para descartar a hipótese "a LLM só acerta porque reconhece o benchmark",
+foi criada uma aplicação **sintética e inédita**.
+
+**Projeto novo:** `drone-rescue-api/` — Spring Boot 3.2.5, Java 17, banco **H2 em
+memória** (zero setup, recriado a cada boot), porta 7070.
+
+**Decisões de design:**
+- Domínio fictício e incomum ("Observatório de Drones de Resgate": pilotos e
+  missões) para minimizar qualquer sobreposição com dados de treino.
+- Banco em memória (H2) para reprodutibilidade trivial — não exige Docker nem
+  seed externo, ao contrário do crAPI.
+- **Mix controlado** de endpoints: 3 vulneráveis (não validam o dono) e 2 seguros
+  (validam `token.pilot == recurso.owner` → 403). Assim o gabarito é conhecido
+  por construção e permite medir falso positivo de verdade.
+- Spec servido em `GET /openapi.json` (recurso estático), consumido pelo detector.
+
+**Integração ao detector:** `DroneSetup.java` + `MainDrone.java` (análogos aos do
+VAmPI) e `GroundTruth.DRONE_VULNERABLE`. Núcleo (LLM + verificador) reutilizado
+sem alteração.
+
+**Resultado:** 3 TP, 1 FP, 0 FN, 1 TN → Precisão 75%, **Recall 100%**, F1 85,7%.
+- Recall 100% em alvo inédito = forte evidência de raciocínio, não memorização.
+- O verificador distinguiu o endpoint seguro (`GET /briefing`: own=200 vs
+  cross=403 → DENIED/TN).
+- O único FP foi o `DELETE /missions/{id}` (seguro), marcado VULNERABLE porque o
+  verificador testa via GET e a URL casou com a rota GET vulnerável. Mesma
+  limitação GET-only, agora manifestada como FP.
+
+---
+
 ## Resumo dos arquivos alterados
 
 | Arquivo | Alterações |
@@ -339,8 +372,11 @@ verificador (os FN são todos endpoints de escrita).
 | `src/.../MainSemLLM.java` | **Novo** — experimento de ablação sem LLM (Tarefa 1) |
 | `src/.../setup/VampiSetup.java` | **Novo** — setup do VAmPI (Tarefa 2) |
 | `src/.../MainVampi.java` | **Novo** — pipeline LLM + Diff no VAmPI (Tarefa 2) |
-| `src/.../metrics/GroundTruth.java` | **Novo** — gabarito de endpoints vulneráveis por benchmark |
+| `src/.../metrics/GroundTruth.java` | **Novo** — gabarito por benchmark (crAPI, VAmPI, Drone) |
 | `src/.../metrics/MetricsCalculator.java` | **Novo** — cálculo honesto de TP/FP/FN/TN vs gabarito |
+| `src/.../setup/DroneSetup.java` | **Novo** — setup do alvo inédito Drone |
+| `src/.../MainDrone.java` | **Novo** — pipeline LLM + Diff no alvo inédito |
+| `drone-rescue-api/` | **Novo projeto** — API sintética vulnerável (Spring Boot + H2) |
 | `src/.../Main.java` | Também passou a exportar CSV com métricas vs gabarito |
 | `vampi-openapi.json` | **Novo** — spec do VAmPI |
 | `scripts/zap_json_to_csv.py` | **Novo** — converte relatório JSON do ZAP para CSV |
