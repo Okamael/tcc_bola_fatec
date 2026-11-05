@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class RuleBasedBaseline {
 
-    public record BaselineFinding(String path, String method, String reason) {}
+    public record BaselineFinding(String path, String method, List<String> pathParams, String reason) {}
 
     public List<BaselineFinding> detect(String specUrl) {
         var parser = new OpenApiParser();
@@ -20,6 +20,7 @@ public class RuleBasedBaseline {
             .map(ep -> new BaselineFinding(
                 ep.path(),
                 ep.method(),
+                ep.pathParams(),
                 "Endpoint contém path parameter(s): " + ep.pathParams()
             ))
             .toList();
