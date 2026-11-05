@@ -138,6 +138,61 @@ Endpoints sensíveis identificados: 9
 
 ---
 
+## Passo 5b — Experimento "Sem LLM" (ablação)
+
+Isola a contribuição do LLM: usa a lista de endpoints do `RuleBasedBaseline`
+(todos com path parameter) em vez da inferência semântica, mas passa pelo
+mesmo motor de verificação diferencial.
+
+```bash
+cd tcc-bola-detector
+
+docker exec postgresdb psql -U admin -d crapi -c \
+  "SELECT setval('user_login_id_seq', (SELECT MAX(id) FROM user_login) + 1);"
+
+mvn exec:java \
+  -Dexec.mainClass="br.edu.tcc.bola.MainSemLLM" \
+  -Dexec.args="openapi.json http://localhost:8888 results_sem_llm.csv" 2>&1 \
+  | tee ../outputs/sem-llm-detector.txt
+```
+
+**Saída esperada:** `Sem LLM,4,0,0,3,2,1.000,1.000,1.000,1.000,<tempo>,0`
+e o arquivo `results_sem_llm.csv`.
+
+> Não requer `OPENAI_API_KEY` — o custo de tokens é 0.
+
+---
+
+## Passo 5c — Teste de generalização no VAmPI
+
+Valida a arquitetura em um segundo benchmark (erev0s/vampi), com estrutura de
+API, autenticação e identificadores diferentes do crAPI.
+
+```bash
+# 1. Subir o VAmPI na porta 5001 (a 5000 conflita com o AirPlay no macOS)
+docker rm -f vampi 2>/dev/null
+docker run -d -e vulnerable=1 -p 5001:5000 --name vampi erev0s/vampi
+
+# 2. Baixar o spec do VAmPI
+curl -s http://localhost:5001/openapi.json -o tcc-bola-detector/vampi-openapi.json
+
+# 3. Rodar o detector completo
+cd tcc-bola-detector
+export OPENAI_API_KEY=$(cut -d= -f2- ../key.env)
+
+mvn exec:java \
+  -Dexec.mainClass="br.edu.tcc.bola.MainVampi" \
+  -Dexec.args="vampi-openapi.json http://localhost:5001 results_vampi.csv" 2>&1 \
+  | tee ../outputs/vampi-detector.txt
+```
+
+**Saída esperada:** `Proposta VAmPI (LLM + Diff),3,0,0,0,2,1.000,1.000,1.000,1.000,<tempo>,0`
+e o arquivo `results_vampi.csv`.
+
+> O VAmPI popula seu banco automaticamente via `GET /createdb` (feito pelo `MainVampi`).
+
+---
+
 ## Passo 6 — Executar o ZAP (Baseline DAST)
 
 ```bash
@@ -174,13 +229,15 @@ mv metrics_comparison.png confusion_matrices.png ../outputs/
 
 ## Estrutura do `results.csv`
 
-Preencha com os resultados reais de cada ferramenta:
+Resultados consolidados dos experimentos (reproduzidos em 05/11/2026):
 
 ```csv
 tool,tp,fp,fn,tn,inconclusive,precision,recall,f1,accuracy,time_s,tokens
-Proposta (LLM + Diff),4,0,0,3,2,1.000,1.000,1.000,0.778,14.5,4500
+Proposta (LLM + Diff),4,0,0,3,2,1.000,1.000,1.000,1.000,37.0,4500
+Sem LLM (Regras + Diff),4,0,0,3,2,1.000,1.000,1.000,1.000,3.9,0
 Baseline (Regras),4,5,0,0,0,0.444,1.000,0.615,0.444,0.5,0
 Baseline (ZAP),0,80,4,0,0,0.000,0.000,0.000,0.000,300,0
+Proposta VAmPI (LLM + Diff),3,0,0,0,2,1.000,1.000,1.000,1.000,6.3,0
 ```
 
 | Coluna | Descrição |
@@ -189,7 +246,9 @@ Baseline (ZAP),0,80,4,0,0,0.000,0.000,0.000,0.000,300,0
 | `fp` | Falso Positivo — falso alarme |
 | `fn` | Falso Negativo — BOLA real não detectado |
 | `tn` | Verdadeiro Negativo — endpoint seguro classificado corretamente |
-| `inconclusive` | Resultado indeterminado (apenas para a proposta) |
+| `inconclusive` | Resultado indeterminado (405/erro — apenas para a proposta e sem-LLM) |
+
+> A análise detalhada de cada veredito está em `RESULTADOS.md`.
 
 ---
 
@@ -199,33 +258,46 @@ Baseline (ZAP),0,80,4,0,0,0.000,0.000,0.000,0.000,300,0
 # 1. Posicionar na raiz do repositório
 cd ~/Documents/GitHub/tcc_bola_fatec
 
-# 2. Carregar chave
-export OPENAI_API_KEY=$(cat key.env)
+# 2. Carregar chave (key.env está no formato OPEN_API_KEY=sk-...)
+export OPENAI_API_KEY=$(cut -d= -f2- key.env)
 
-# 3. Garantir crAPI rodando
-curl -s http://localhost:8888/identity/api/auth/signup | head -c 50
+# 3. Garantir crAPI (8888) e VAmPI (5001) rodando
+curl -s -o /dev/null -w "crAPI:%{http_code}\n" http://localhost:8888/identity/api/auth/signup
+curl -s -o /dev/null -w "VAmPI:%{http_code}\n" http://localhost:5001/
 
-# 4. Entrar no projeto
+# 4. Entrar no projeto e compilar
 cd tcc-bola-detector
-
-# 5. Compilar
 mvn clean package -q
 
-# 6. Baseline regras
+# 5. Corrigir sequence do Postgres do crAPI (evita duplicate key)
+docker exec postgresdb psql -U admin -d crapi -c \
+  "SELECT setval('user_login_id_seq', (SELECT MAX(id) FROM user_login) + 1);"
+
+# 6. Baseline regras (crAPI)
 mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.baseline.RuleBasedBaseline" \
   -Dexec.args="openapi.json" 2>&1 | tee ../outputs/baseline-rule-based.txt
 
-# 7. Detector LLM
+# 7. Detector LLM (crAPI — proposta completa)
 mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.Main" \
   -Dexec.args="openapi.json http://localhost:8888" 2>&1 | tee ../outputs/llm-detector.txt
 
-# 8. ZAP
+# 8. Experimento Sem LLM (crAPI — ablação)
+mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.MainSemLLM" \
+  -Dexec.args="openapi.json http://localhost:8888 results_sem_llm.csv" 2>&1 \
+  | tee ../outputs/sem-llm-detector.txt
+
+# 9. Detector LLM (VAmPI — generalização)
+mvn exec:java -Dexec.mainClass="br.edu.tcc.bola.MainVampi" \
+  -Dexec.args="vampi-openapi.json http://localhost:5001 results_vampi.csv" 2>&1 \
+  | tee ../outputs/vampi-detector.txt
+
+# 10. ZAP (crAPI — baseline DAST)
 docker run --rm --network host -v $(pwd):/zap/wrk/:rw \
   -t ghcr.io/zaproxy/zaproxy:stable zap-api-scan.py \
   -t openapi.json -f openapi -r zap-report.html -J zap-report.json
 python3 scripts/zap_json_to_csv.py zap-report.json > ../outputs/zap_alerts.csv
 
-# 9. Gráficos
+# 11. Gráficos
 python3 scripts/generate_charts.py ../results.csv
 mv metrics_comparison.png confusion_matrices.png ../outputs/
 ```

@@ -221,12 +221,91 @@ O `Main.java` passou a chamar `fetchResourceIds()` para cada usuário antes de i
 
 ---
 
+# Experimentos adicionais (sugeridos pelo orientador)
+
+## 9. Tarefa 1 — Experimento "Sem LLM" (ablação)
+
+**Objetivo:** isolar a contribuição do LLM, substituindo a inferência semântica
+pela lista de regras estáticas, mantendo o mesmo motor de verificação diferencial.
+
+**Arquivos:**
+- `MainSemLLM.java` (novo) — orquestra o fluxo sem LLM
+- `RuleBasedBaseline.java` (ajustado) — `BaselineFinding` agora expõe `pathParams`
+
+**Decisão de design — por que adicionar `pathParams` ao record:**  
+O `BaselineFinding` original só tinha `(path, method, reason)`. Para converter
+para `SensitiveEndpoint` precisávamos do nome do path parameter (para preencher
+`objectIdParam`). O nome estava embutido no texto de `reason`
+(`"...path parameter(s): [video_id]"`), o que seria frágil de parsear. Preferi
+adicionar `pathParams` explicitamente ao record — mudança mínima e segura.
+
+**Conversão `BaselineFinding → SensitiveEndpoint`:**  
+`objectIdParam` recebe o primeiro path parameter (ou `"id"` como fallback);
+`ownershipHints` fica vazio e `rationale` recebe `"Regra estática"`.
+
+**Resultado:** idêntico à proposta completa no crAPI (4 TP, 3 DENIED, 2 INCONCLUSIVE).
+Achado relevante: **a verificação diferencial, sozinha, já elimina os 5 falsos
+positivos do baseline de regras** — o valor do LLM está mais na economia de
+requisições (testar menos endpoints) do que na precisão final neste benchmark.
+
+---
+
+## 10. Tarefa 2 — Teste de generalização no VAmPI
+
+**Objetivo:** validar a arquitetura em um segundo benchmark (erev0s/vampi) com
+estrutura, autenticação e identificadores diferentes do crAPI.
+
+**Arquivos:**
+- `VampiSetup.java` (novo) — setup do VAmPI (createdb → register → login → add book)
+- `MainVampi.java` (novo) — pipeline LLM + Diferencial contra o VAmPI
+- `vampi-openapi.json` (novo) — spec do VAmPI (baixado de `GET /openapi.json`)
+
+**Problema 1 — porta 5000 ocupada pelo AirPlay no macOS:**  
+A `curl http://localhost:5000` respondia `Server: AirTunes/...` — o AirPlay
+Receiver do macOS ocupa a 5000. Solução: subir o VAmPI mapeando para a 5001
+(`-p 5001:5000`).
+
+**Problema 2 — endpoint do spec diferente:**  
+O VAmPI expõe o spec em `GET /openapi.json` (não `/openapi3.json`).
+
+**Diferenças de design absorvidas sem alterar o núcleo:**
+- Auth: VAmPI usa `Authorization: Bearer <token>` (igual ao crAPI) — o campo no
+  login é `auth_token` em vez de `token`.
+- Identificadores: no VAmPI são strings legíveis (`book_title`, `username`),
+  não UUIDs. O `fillPath()` genérico do `DifferentialVerifier` lida com ambos
+  sem mudança.
+- Setup de recurso: cria um "livro" com secret (`POST /books/v1`) em vez de
+  veículo. O BOLA clássico é ler o secret do livro de outro usuário via
+  `GET /books/v1/{book_title}`.
+
+**Resultado:** 3 VULNERABLE (`GET /books/v1/{book_title}`, `GET /users/v1/{username}`,
+`DELETE /users/v1/{username}`), 2 INCONCLUSIVE (os PUT de email/password).
+
+**Limitação conhecida (documentada):**  
+O `DifferentialVerifier` só executa requisições **GET**. Os endpoints
+`PUT /users/v1/{username}/email` e `PUT /users/v1/{username}/password` do VAmPI
+são vulneráveis a BOLA (usam o username da URL, não do token), mas foram
+classificados como INCONCLUSIVE porque o verificador testou via GET e recebeu
+405 (Method Not Allowed). Estender o verificador para PUT/POST/DELETE
+capturaria esses casos — fica como trabalho futuro.
+
+---
+
 ## Resumo dos arquivos alterados
 
 | Arquivo | Alterações |
 |---|---|
 | `openapi.json` | Substituído: de HTML 404 para o spec oficial do OWASP crAPI com 40 endpoints |
 | `src/.../setup/CrApiSetup.java` | Reescrito em grande parte: email curto, número aleatório, `postRaw`/`postJson` defensivos, `pickFreeVinWithPincode()` via Postgres, polling assíncrono, novo método `fetchResourceIds()` |
-| `src/.../Main.java` | Leitura do spec por arquivo ou HTTP; uso de `fetchResourceIds()` para mapear todos os path parameters reais |
+| `src/.../Main.java` | Leitura do spec por arquivo ou HTTP; uso de `fetchResourceIds()` |
+| `src/.../llm/LlmAnalyzer.java` | Tratamento de erro da API OpenAI + log de status HTTP |
+| `src/.../baseline/RuleBasedBaseline.java` | `BaselineFinding` passou a expor `pathParams` (Tarefa 1) |
+| `src/.../MainSemLLM.java` | **Novo** — experimento de ablação sem LLM (Tarefa 1) |
+| `src/.../setup/VampiSetup.java` | **Novo** — setup do VAmPI (Tarefa 2) |
+| `src/.../MainVampi.java` | **Novo** — pipeline LLM + Diff no VAmPI (Tarefa 2) |
+| `vampi-openapi.json` | **Novo** — spec do VAmPI |
+| `scripts/zap_json_to_csv.py` | **Novo** — converte relatório JSON do ZAP para CSV |
 
-Os demais arquivos (`OpenApiParser`, `LlmAnalyzer`, `LlmResponse`, `AuthSession`, `DifferentialVerifier`, `RuleBasedBaseline`, `pom.xml`, `docker-compose.yml`, `scripts/generate_charts.py`) **não foram alterados** em relação ao código original do `projeto_codigo.md`.
+Os demais arquivos (`OpenApiParser`, `LlmResponse`, `AuthSession`,
+`DifferentialVerifier`, `pom.xml`, `docker-compose.yml`,
+`scripts/generate_charts.py`) permanecem conforme o `projeto_codigo.md` original.
